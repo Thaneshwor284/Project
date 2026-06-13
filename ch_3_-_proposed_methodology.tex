@@ -1,0 +1,162 @@
+
+
+% \documentclass[main]{subfiles} 
+
+% \begin{document}
+
+% \chapter{\MakeUppercase{Proposed Methodology}}
+
+% \section{Project Approach}
+% \subsection{Development methodology}
+% \subsection{Major functional components}
+% \subsection{System Architecture}
+% \section{Proposed Algorithm}
+% \subsection{Functional Workflows}
+% \subsection{Block diagram}
+% \subsection{Processing pipeline}
+% \section{Tools and Technologies}
+
+% \end{document}
+
+\documentclass[main]{subfiles} 
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{adjustbox} % preamble
+\usepackage{caption}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{adjustbox} % for scaling
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\begin{document}
+\setcounter{chapter}{2}
+\chapter{Proposed Methodology}
+
+\section{Proposed Research Design / Project Approach}
+
+\subsection{Development Methodology}
+\begin{enumerate}[label=\roman*.]
+  \item \textbf{Systems Engineering Approach}
+  The proposed UAV based pesticide spraying system will be designed and developed using a Embedded System Engineering Approach to ensure systematic design. The System Engineering Approach is used to implement such systems and validate them. The development process starts with requirement analysis, where key parameters like payload capacity, flight time, stability are analyzed. Based on these system the drone will be developed. 
+  \item \textbf{Iterative Prototyping}: Iterative prototyping/ Prototyping model will be adopted. The flight control, spray mechanism, and power distribution between each system will be designed, assembled and tested independently before complete integration. This approach provides probable error and design issues which help us to mitigate the problems.
+  \item \textbf{Integration Testing}: Design of customized frame, drone assembling, integration of flight controller will be achieved. The spraying mechanism will be integrated in the whole embedded system.
+  \item \textbf{Validation}: We will be conducting the performance trials in real crop fields. Also we will be measuring the payload handling capability and overall operational performance.
+\end{enumerate}
+
+\subsection{System Architecture}
+\begin{description}[style=nextline]
+  \item[Flight Control Layer:] It includes the Pixhawk flight controller and Flysky receiver that process commands and manage flight and spraying system. 
+  \item[Actuation Layer:] It consist of EScs that control the brushless motors and relay module for operating DC pump
+  \item[Power Distribution Layer:] It enables the power distribution through Lipo battery to the flight controller and spraying system.
+\end{description}
+
+\section{Proposed Algorithm}
+
+\subsection{Functional Workflows}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+\node (req) [process] {Requirement Analysis};
+\node (design) [process, below of=req] {System Design};
+\node (hardware) [process, below of=design] {Hardware Assembly};
+\node (software) [process, below of=hardware] {Software Configuration};
+\node (test) [process, below of=software] {Testing};
+\node (deploy) [process, below of=test] {Deployment};
+
+\draw [arrow] (req) -- (design);
+\draw [arrow] (design) -- (hardware);
+\draw [arrow] (hardware) -- (software);
+\draw [arrow] (software) -- (test);
+\draw [arrow] (test) -- (deploy);
+\end{tikzpicture}
+\caption{Development pipeline from requirement analysis to deployment}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Block Diagrams}
+\tikzset{
+    block/.style={draw, rectangle, rounded corners, align=center, minimum width=2.0cm, minimum height=0.9cm},
+    arrow/.style={->,>=Stealth,thick}
+}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    x=2.55cm,
+    y=1.35cm,
+    every node/.style={font=\scriptsize}
+]
+
+% Flight control path
+\node[block] (tx) at (0,0) {FlySky\\Transmitter};
+\node[block] (pixhawk) at (1,0) {Pixhawk\\Flight Controller};
+\node[block] (esc) at (2,0) {ESCs};
+\node[block] (motor) at (3,0) {Brushless\\Motors};
+
+\draw[arrow] (tx) -- (pixhawk);
+\draw[arrow] (pixhawk) -- (esc);
+\draw[arrow] (esc) -- (motor);
+
+% Spray control path
+\node[block] (aux) at (1,-1.55) {Auxiliary\\Channel};
+\node[block] (pump) at (2,-1.55) {DC Water\\Pump};
+\node[block] (nozzle) at (3,-1.55) {Spray\\Nozzle};
+
+\draw[arrow] (aux) -- (pump);
+\draw[arrow] (pump) -- (nozzle);
+
+\end{tikzpicture}
+\caption{Block diagram of UAV flight control and spraying system}
+\label{fig:uav_block}
+\end{figure}
+
+\subsection{Processing Pipeline}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  x=3.1cm,
+  every node/.style={font=\scriptsize}
+]
+
+\tikzset{block/.style={draw, rectangle, rounded corners, align=center, minimum width=1.9cm, minimum height=0.9cm},
+arrow/.style={->,>=Stealth,thick,shorten >=2pt,shorten <=2pt}}
+
+\node[block] (input) at (0,0) {Data Input\\FlySky Signals};
+\node[block] (flight) at (1,0) {Flight Control\\Pixhawk};
+\node[block] (spray) at (2,0) {Spray Control\\Aux Channel};
+\node[block] (output) at (3,0) {Output\\Motors + Pump};
+
+\draw[arrow] (input.east) -- (flight.west);
+\draw[arrow] (flight.east) -- (spray.west);
+\draw[arrow] (spray.east) -- (output.west);
+
+\end{tikzpicture}
+\caption{Processing Pipeline for UAV Flight and Spraying Operations}
+\label{fig:processing_pipeline}
+\end{figure}
+
+
+\section{Tools and Technologies}
+\subsubsection*{Hardware Requirements}
+A UAV equipped with pesticide spraying system:
+
+\begin{itemize}
+    \item \textbf{Pixhawk Controller}: An advanced open-source flight control system designed for multirotors, enabling stabilization for enhanced flight performance.
+    \item \textbf{Flysky F6-i6 transmitter and 6CH FS-iA6B receiver}: Enables wireless communication between the drone, the spraying system, and the pilot, providing precise control for spraying pesticide, flight adjustments, and real-time responsiveness during flight.
+    \item \textbf{2200 mAH Li-ion Battery}: Powers the UAV with lightweight, high-energy density.
+    \item \textbf{4 BLDC (Brushless DC) Motors}: Efficient motors that drive the propellers and generate lift.
+    \item \textbf{4 ESCs (Electronic Speed Controllers)}: Control motor speed and ensure stable flight operations.
+    \item \textbf{4 Propellers}: Blades that create thrust to lift and maneuver the UAV.
+    \item \textbf{DC Water Pump}: Used for spraying pesticide.
+    \item \textbf{Single/Dual Channel Relay Module}: Used for safely controlling the DC pump.
+\end{itemize}
+\subsubsection*{Software Requirements}
+The software tools required include:
+
+\begin{itemize}
+    \item \textbf{Mission Planner}: Used for the drone’s accelerometer and compass calibration, as well as configuration and mission planning.
+\end{itemize}
+\end{document}
+
